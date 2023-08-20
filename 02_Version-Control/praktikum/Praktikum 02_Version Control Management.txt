@@ -1,0 +1,11 @@
+Langkah-langkah merge branch :
+1. Buat branch baru
+- Buka terminal vscode
+- Ketikkan git branch developer (untuk membuat branch dengan nama developer)
+- Cek apakah branch sudah berhasil dibuat dengan git branch --list
+2. Commit branch dengan git push -u origin developer
+3. Tambahkan / ubah isi file dalam branch baru
+4. Commit isi file yang sudah diubah tersebut dalam branch baru
+5. Pada github, lakukan pull request pada branch baru (developer) ke branch based main 
+6. Apabila sudah tidak ada bug, klik merge branch
+
