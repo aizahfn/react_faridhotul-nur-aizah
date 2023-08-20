@@ -55,4 +55,4 @@ $ git  checkout master
 $ git merge new-feature
 $ git branch -d new-feature
 
-Atau dapat kita lakukan dengan pull request pada repository github, kemudian merge branch.
+Git Merge juga dapat dilakukan dengan cara lain, yaitu dapat kita lakukan dengan pull request pada repository github, kemudian merge branch.
