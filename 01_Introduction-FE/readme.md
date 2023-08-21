@@ -1,4 +1,4 @@
-# (1)Introduction FE
+# (01)Introduction FE
 
 ## 1. Pengenalan apa itu Front End Developer 
 Front End developer merupakan software engineer yang akan mengurus hal-hal tentang apa yang akan dilihat / ditampilkan kepada oleh user. Dimana hasil kerjanya akan terlihat pada pengguna / client side. Front End developer akan mengembangkan tampilan antarmuka pengguna sehingga lebih nyaman saat digunakan oleh user.

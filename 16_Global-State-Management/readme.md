@@ -1,1 +1,1 @@
-# SUMMARY
+# (16)Global State Management

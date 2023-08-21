@@ -1,1 +1,1 @@
-# SUMMARY
+# (22)Perkenalan AI dan OpenAI
