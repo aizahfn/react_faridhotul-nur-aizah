@@ -13,7 +13,7 @@ Internal CSS dapat dilakukan dengan menggunakan syntax dalam satu file HTML. Syn
 Misalkan <h1 style="color: #19355f;">Hello World</h1>
 SYntax ini dapat digunakan untuk elemen tunggal pada HTML, namun syntax ini di prioritaskan untuk menerapkan style yang unik.
 
-## 3. CSS Properties
+## 3. Beberapa CSS Properties
 Fonts
 - Font : digunakan untuk menetapkan semua properti font dalam satu deklarasi.
 - Font-family : digunaka untuk menentukan kelompok font teks

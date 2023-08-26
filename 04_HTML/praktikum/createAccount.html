@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Account</title>
+    </head>
+    <body> 
+        <h1>Create Account</h1>
+        <h2>Detail Product</h2>
+        <form>
+            <p>First name : <br>
+            <input id="first-name" name="firstName" type="text" placeholder="">
+            </p>
+
+            <p>Last name : <br>
+            <input id="last-name" name="lastName" type="text" placeholder="">
+            </p>
+
+            <p>Username : <br>
+            <input id="username" name="Username" type="text" placeholder="">
+            </p>
+
+            <p>Email : <br>
+            <input id="email" name="email" type="text" placeholder="">
+            </p>
+
+            <p>Gender : <br>
+            <input type="radio" id="male" name="male" value="male">
+            <label for="male">Male</label>
+            <br>
+            <input type="radio" id="female" name="female" value="female">
+            <label for="female">Female</label>
+            <br>
+            <input type="radio" id="other" name="other" value="other">
+            <label for="other">Other</label>
+            </p>
+
+            <p>Adress : <br>
+                <input id="address" name="address" type="text" placeholder="">
+            </p>
+
+            <p>Adress 2 : <br>
+                <input id="address2" name="address2" type="text" placeholder="">
+            </p>
+
+            <p>Nasionality : </p> 
+            <label for="Nasionality">Nasionality</label><br/>
+            <select id="nasionality" name="nasionality" required>
+                <option value =""></option>
+                <option value="WNI">WNI</option>
+                <option value="WNA">WNA</option>
+            </select><br/>
+
+            <p>Language Spoken : <br>
+                <input type="radio" id="bhs-indo" name="bhsIndo" value="bhsIndo">
+                <label for="bhsIndo">Bahasa Indonesia</label>
+                <br>
+                <input type="radio" id="english" name="english" value="english">
+                <label for="english">English</label>
+                <br>
+                <input type="radio" id="other" name="other" value="other">
+                <label for="other">Other</label>
+            </p>
+
+            <button class="hero-button" id="button-started">Create Account</button>
+        </form>
+    </body>
+</html>
