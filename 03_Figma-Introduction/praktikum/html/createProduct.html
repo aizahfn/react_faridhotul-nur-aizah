@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create Product</title>
+    </head>
+    <body> 
+        <h1>Create Product</h1>
+        <h2>Detail Product</h2>
+        <form>
+            <p>Product name : <br>
+            <input id="product-name" name="productName" type="text" placeholder="" required>
+            </p>
+
+            <label for="Product-Category" required>Product Category : </label><br/>
+            <select id="Product-Category" name="Product-Category" required>
+                <option value =""></option>
+                <option value="TV">TV</option>
+                <option value="Radio">Radio</option>
+                <option value="Speaker">Speaker</option>
+            </select><br/>
+
+            <p>Product Freshness : <br>
+            <input type="radio" id="brand-new" name="brandNew" value="Brand New">
+            <label for="Brand New">Brand New</label>
+            <br>
+            <input type="radio" id="Second Hank" name="Second Hank" value="Second Hank">
+            <label for="Second Hank">Second Hank</label>
+            <br>
+            <input type="radio" id="Refurbished" name="Refurbished" value="Refurbished">
+            <label for="Refurbished">Refurbished</label>
+            </p>
+
+            <p>Image of Product 
+                <button class="hero-button" id="button-started">Choose File</button> No file choosen</p>
+
+            <label>Additional Description</label><br>
+            <textarea type="text" class="form-control" id="additional-description" required rows="5" required>
+            </textarea>
+
+            <p>Product price : <br>
+            <input id="product-price" name="productPrice" type="number" placeholder="$ 100" required> 
+            <br></p>
+
+            <button class="hero-button" id="button-started">Submit</button>
+        </form>
+    </body>
+</html>
