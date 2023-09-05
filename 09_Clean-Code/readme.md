@@ -12,7 +12,7 @@ Clean code merupakan istilah untuk kode yang mudah dibaca, dipahami dan diubah o
 6. Komentar
 7. Good function
 8. Gunakan konvensi
-Misalnya menggunakan style guide, penggunaan aibnb untuk javascript dan google untuk python.
+Misalnya menggunakan style guide, penggunaan airbnb untuk javascript dan google untuk python.
 9. Formatting
 - lebar baris code 80 - 120 karakter
 - Satu class 300 - 500 baris
