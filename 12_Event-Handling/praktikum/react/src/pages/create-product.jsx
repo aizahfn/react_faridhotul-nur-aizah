@@ -1,5 +1,7 @@
 import React from "react";
 
+import Button from "../components/button";
+
 function CreateProduct() {
   // var NewComponent = React.createClass({
   //   render: function () {
@@ -196,9 +198,10 @@ function CreateProduct() {
           }}
         >
           <button
+            label="Submit"
             className="btn btn-primary"
             onclick="checkForm()"
-            type="button"
+            type="submit"
           >
             Submit
           </button>
