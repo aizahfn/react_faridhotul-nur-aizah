@@ -1,20 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CreateProduct() {
   const [randomNumber, setRandomNumber] = useState(null);
   const [language, setLanguage] = useState("en");
   const [productName, setProductName] = useState("");
   const [productNameError, setProductNameError] = useState("");
+  const [products, setProducts] = useState([]);
+  const [productCategory, setProductCategory] = useState("");
+  const [productFreshness, setProductFreshness] = useState("");
+  const [productPrice, setProductPrice] = useState("");
+  const [productNumber, setProductNumber] = useState("");
 
   const generateRandomNumber = () => {
     const random = Math.floor(Math.random() * 100);
     console.log("Random Number:", random);
     setRandomNumber(random);
   };
+
+  const handleProductChange = (event) => {
+    const { name, value } = event.target;
+    setNewProduct({
+      ...newProduct,
+      [name]: value,
+    });
+  };
+
   const handleProductNameChange = (event) => {
     const value = event.target.value;
     setProductName(value);
-
+    //Validasi value tidak boleh lebih dari 25 karakter
     if (value.length > 25) {
       setProductNameError(alert("Product Name must not exceed 25 characters."));
     } else {
@@ -22,12 +37,53 @@ export default function CreateProduct() {
     }
   };
 
-  const handleSubmit = () => {
-    if (productName === "") {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!productName) {
       alert("Please enter a valid product name.");
       return;
     }
+
+    //Generate nomor unik
+    const uniqueNumber = generateUniqueNumber();
+
+    //Menambahkan produk baru ke dalam state
+    setProducts([
+      ...products,
+      {
+        no: uniqueNumber,
+        productName: productName,
+        productCategory: newProduct.productCategory,
+        productFreshness: newProduct.productFreshness,
+        productPrice: newProduct.productPrice,
+      },
+    ]);
+
+    //Reset input fields setelah submit
+    setNewProduct({
+      productName: "",
+      productCategory: "",
+      productFreshness: "",
+      productPrice: "",
+    });
   };
+
+  const [newProduct, setNewProduct] = useState({
+    productName: "",
+    productCategory: "",
+    productFreshness: "",
+    productPrice: "",
+  });
+
+  const generateUniqueNumber = () => {
+    const uniqueNumber = uuidv4();
+    return uuid.v4();
+  };
+
+  //Alert welcome
+  useEffect(() => {
+    alert("Welcome");
+  }, []);
 
   const article = {
     title: {
@@ -89,15 +145,12 @@ export default function CreateProduct() {
           </div>
         </div>
       </nav>
-      {/* nav section end */}
-
       <button
         className="my-3 bg-primary col-md-3 border-0 rounded-3 text-light col-4"
         onClick={() => setLanguage(language === "en" ? "id" : "en")}
       >
         Change Language
       </button>
-      {/* logo */}
       <br />
       <div className="row text-center align-items-center">
         <div className="col-12 text-center">
@@ -108,7 +161,6 @@ export default function CreateProduct() {
           />
         </div>
       </div>
-      {/* logo */}
       <div className="row text-center align-items-center">
         <div className="col-12 text-center">
           <h1 className="text-center">{article.title[language]}</h1>
@@ -120,14 +172,18 @@ export default function CreateProduct() {
           <h3>Detail Product</h3>
         </div>
       </div>
-      <form className="col-12 text-align-left" style={{ marginLeft: "30%" }}>
+      <form
+        className="col-12 text-align-left"
+        style={{ marginLeft: "30%" }}
+        onSubmit={handleSubmit}
+      >
         <label htmlFor="productName">Product Name : </label>
         <br />
         <input
           id="product-name"
           name="productName"
           type="text"
-          placeholder
+          placeholder="Product Name"
           required
           value={productName}
           onChange={handleProductNameChange}
@@ -141,7 +197,15 @@ export default function CreateProduct() {
         <br />
         <label htmlFor="productCategory">Product Category : </label>
         <br />
-        <select id="product-category" name="productCategory" required>
+        <select
+          id="product-category"
+          name="productCategory"
+          type="option"
+          placeholder="Product Category"
+          required
+          value={newProduct.productCategory}
+          onChange={handleProductChange}
+        >
           <option value />
           <option value="TV">TV</option>
           <option value="Radio">Radio</option>
@@ -190,11 +254,11 @@ export default function CreateProduct() {
         <br />
         <input
           type="radio"
-          id="brand-new"
-          name="brandNew"
-          defaultValue="Brand New"
+          id="brandNew"
+          name="productFreshness"
+          value="Brand New"
         />
-        <label htmlFor="Brand New">Brand New</label>
+        <label htmlFor="brandNew">Brand New</label>
         <br />
         <input
           type="radio"
@@ -232,6 +296,8 @@ export default function CreateProduct() {
           type="number"
           placeholder="$ 100"
           required
+          value={newProduct.productPrice}
+          onChange={handleProductChange}
         />
         <div className="error" />
         <br />
@@ -269,6 +335,40 @@ export default function CreateProduct() {
           </button>
         </div>
       </form>
+      <div>
+        <h2>Product List</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Product Name</th>
+              <th>Product Category</th>
+              <th>Product Freshness</th>
+              <th>Product Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product, index) => (
+              <tr key={index}>
+                <td>{product.no}</td>
+                <td>{product.productName}</td>
+                <td>{product.productCategory}</td>
+                <td>{product.productFreshness}</td>
+                <td>{product.productPrice}</td>
+              </tr>
+            ))}
+            {newProduct.productName && (
+              <tr>
+                <td>{generateUniqueNumber()}</td>
+                <td>{productName}</td>
+                <td>{newProduct.productCategory}</td>
+                <td>{newProduct.productFreshness}</td>
+                <td>{newProduct.productPrice}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
