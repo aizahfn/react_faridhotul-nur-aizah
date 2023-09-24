@@ -298,7 +298,8 @@ const CreateProduct = () => {
         <tbody>
           {products.map((product, index) => (
             <tr key={product.id}>
-              <td>{index + 1}</td>
+              <Link to={`/product/${product.id}`}>{product.id}</Link>
+              {/* <td>{index + 1}</td> */}
               <td>{product.productName}</td>
               <td>{product.productCategory}</td>
               <td>{product.productFreshness}</td>
