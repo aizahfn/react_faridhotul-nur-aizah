@@ -241,6 +241,8 @@ const CreateProduct = () => {
             <th scope="col">Product Category</th>
             <th scope="col">Product Freshness</th>
             <th scope="col">Product Price</th>
+            <th scope="col">Product Description</th>
+            <th scope="col">Product Image</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -253,6 +255,17 @@ const CreateProduct = () => {
               <td>{product.productCategory}</td>
               <td>{product.productFreshness}</td>
               <td>{product.productPrice}</td>
+              <td>{product.productDescription}</td> {}
+              <td>
+                {product.productImage && (
+                  <img
+                    src={URL.createObjectURL(product.productImage)}
+                    alt="Product"
+                    width="50"
+                  />
+                )}{" "}
+                {}
+              </td>
               <td>
                 <button
                   className="btn btn-danger"
