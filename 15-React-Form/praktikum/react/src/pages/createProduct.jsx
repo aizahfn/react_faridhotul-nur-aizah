@@ -19,6 +19,8 @@ const CreateProduct = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
 
+  const [productPriceError, setProductPriceError] = useState("");
+
   const addProduct = () => {
     if (productNameError === "") {
       const newProduct = {
@@ -33,6 +35,8 @@ const CreateProduct = () => {
       setProducts([...products, newProduct]);
       setUniqueId(uniqueId + 1);
       setProductName("");
+      setSelectedCategory("");
+      setSelectedFreshness("");
       setProductPrice("");
       setadditionalDescription("");
       setProductImage("");
@@ -51,18 +55,65 @@ const CreateProduct = () => {
     setShowDeleteModal(false);
   };
 
+  // Validasi product name
   const handleProductNameChange = (e) => {
     const newName = e.target.value;
     setProductName(newName);
 
-    if (newName.length === 0) {
-      setProductNameError("Please enter a valid product name.");
-    } else if (newName.length > 25) {
-      setProductNameError(alert("Product Name must not exceed 25 characters."));
+    const regex = /^[A-Za-z\s]{1,25}$/;
+    if (!regex.test(newName)) {
+      setProductNameError("Product Name is not valid.");
     } else {
       setProductNameError("");
     }
   };
+
+  // Validasi product category
+  const validateProductCategory = (category) => {
+    const validCategories = ["Television", "Radio", "Speaker"];
+    return validCategories.includes(category);
+  };
+
+  const handleCategoryChange = (e) => {
+    const newCategory = e.target.value;
+    setSelectedCategory(newCategory);
+
+    if (!validateProductCategory(newCategory)) {
+      setSelectedCategoryError("Invalid category selected.");
+    } else {
+      setSelectedCategoryError("");
+    }
+  };
+
+  // Validasi product freshness
+  const validateProductFreshness = (freshness) => {
+    const validFreshnessOptions = ["Brand New", "Second Hand", "Refurbished"];
+    return validFreshnessOptions.includes(freshness);
+  };
+
+  const handleFreshnessChange = (e) => {
+    const newFreshness = e.target.value;
+    setSelectedFreshness(newFreshness);
+
+    if (!validateProductFreshness(newFreshness)) {
+      setSelectedFreshnessError("Invalid freshness selected.");
+    } else {
+      setSelectedFreshnessError("");
+    }
+  };
+
+  // Validasi product price
+  const handleProductPriceChange = (e) => {
+    const newPrice = e.target.value;
+    setProductPrice(newPrice);
+
+    if (!/^\d+(\.\d{0,2})?$/.test(newPrice)) {
+      setProductPriceError("Invalid price format.");
+    } else {
+      setProductPriceError("");
+    }
+  };
+
   const article = {
     title: {
       id: "Buat Akun",
@@ -233,6 +284,7 @@ const CreateProduct = () => {
           </div>
         </Form>
       </div>
+      <h2>List Product</h2>
       <table className="table">
         <thead>
           <tr>
@@ -255,7 +307,7 @@ const CreateProduct = () => {
               <td>{product.productCategory}</td>
               <td>{product.productFreshness}</td>
               <td>{product.productPrice}</td>
-              <td>{product.productDescription}</td> {}
+              <td>{product.additionalDescription}</td> {}
               <td>
                 {product.productImage && (
                   <img
