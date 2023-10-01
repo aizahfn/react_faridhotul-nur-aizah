@@ -6,12 +6,17 @@ import logo from "../assets/bootstrap-logo.svg.png";
 import { Link } from "react-router-dom";
 import ProductDetail from "./productDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { addProduct, deleteProduct } from "../utils/redux/productReducer";
 
-const CreateProduct = () => {
-  const products = useSelector((state) => state.products.products);
-  const dispatch = useDispatch();
+import { useState } from "react";
+import { connect } from "react-redux";
+import { addProduct, deleteProduct } from "../utils/redux/actions.js";
+
+const CreateProduct = (props) => {
+  const {
+    products,
+    deleteProduct,
+    // ...
+  } = props;
 
   // const [productName, setProductName] = useState("");
   // const [productNameError, setProductNameError] = useState("");
@@ -37,7 +42,7 @@ const CreateProduct = () => {
         additionalDescription,
         productImage,
       };
-      dispatch(addProduct(newProduct));
+      addProduct(newProduct);
       setUniqueId(uniqueId + 1);
       setProductName("");
       setSelectedCategory("");
@@ -53,9 +58,7 @@ const CreateProduct = () => {
     setShowDeleteModal(true);
   };
   const confirmDeleteItem = () => {
-    const updatedProducts = products.filter(
-      (product) => product.id !== itemToDelete.id
-    );
+    const updatedProducts = products.filter(deleteProduct(itemToDelete.id));
     setProducts(updatedProducts);
     setShowDeleteModal(false);
   };
@@ -360,5 +363,9 @@ const CreateProduct = () => {
     </div>
   );
 };
+
+const mapStateToProps = (state) => ({
+  products: state.products,
+});
 
 export default CreateProduct;

@@ -7,16 +7,9 @@ import CreateProduct from "./createProduct.jsx";
 import LandingPage from "./landingPage";
 import ProductDetail from "./productDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ReactDOM } from "react-dom";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { createStore, combineReducers } from "redux";
-import productReducer from "../utils/redux/productReducer";
-
-const rootReducer = combineReducers({
-  products: productReducer,
-});
-
-const store = createStore(rootReducer);
+import store from "src/utils/redux/store";
 
 function App() {
   useEffect(() => {
