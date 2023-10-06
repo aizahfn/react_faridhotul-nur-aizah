@@ -1,25 +1,51 @@
 // reducers.js
+import { ADD_PRODUCT, EDIT_PRODUCT, DELETE_PRODUCT } from './actions';
+
 const initialState = {
-  products: [],
+  products: [
+    {
+      id: "e7ce2b97-d0c1-4a75-9c1d-e6dfc8441836",
+      productName: "John",
+      productCategory: "clothing",
+      productFreshness: "Brand New",
+      productPrice: "123",
+      productImage: null, // Changed to null since it's no longer a File object
+      productDescription: "Doe",
+    },
+  ],
 };
 
-const productReducer = (state = initialState, action) => {
+const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_PRODUCT":
+    case ADD_PRODUCT:
       return {
         ...state,
-        products: [...state.products, action.payload],
+        products: [...state.products, action.payload.product],
       };
-    case "DELETE_PRODUCT":
+
+    case EDIT_PRODUCT:{
+      const updatedProductsEdit = state.products.map((product) =>
+        product.id === action.payload.editedProduct.id
+          ? action.payload.editedProduct
+          : product
+      );
       return {
         ...state,
-        products: state.products.filter(
-          (product) => product.id !== action.payload
-        ),
-      };
+        products: updatedProductsEdit,
+      };}
+
+    case DELETE_PRODUCT:{
+      const updatedProductsDelete = state.products.filter(
+        (product) => product.id !== action.payload.productId
+      );
+      return {
+        ...state,
+        products: updatedProductsDelete,
+      };}
+
     default:
       return state;
   }
 };
 
-export default productReducer;
+export default rootReducer;
