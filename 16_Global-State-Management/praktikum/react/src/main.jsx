@@ -4,8 +4,17 @@ import App from "./pages/App";
 import { Provider } from "react-redux";
 import store from "./utils/redux/store.js";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+const root = document.getElementById("root");
+const reactRoot = createRoot(root);
+
+reactRoot.render(
+  <Provider store={store}>
     <App />
-  </React.StrictMode>
+  </Provider>
 );
+
+// ReactDOM.createRoot(document.getElementById("root")).render(
+//   <Provider store={store}>
+//     <App />
+//   </Provider>
+// );
