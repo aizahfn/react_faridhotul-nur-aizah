@@ -6,7 +6,7 @@ Fungsi penetapan hak akses/privilege terhadap sumber daya, yang berkaitan dengan
 
 Langkah umum melakukan autentikasi pada aplikasi react :
 
-- Setup dan Installasi: Pertama, Anda perlu mengatur dan menginstal alat dan pustaka yang dibutuhkan untuk autentikasi dalam proyek React Anda. Beberapa pustaka populer untuk autentikasi termasuk Firebase Authentication, Auth0, Okta, atau menggunakan autentikasi berbasis token dengan server sendiri.
+- Setup dan Installasi: Pertama, Anda perlu mengatur dan menginstal alat dan pustaka yang dibutuhkan untuk autentikasi dalam proyek React Anda. Beberapa pustaka populer untuk autentikasi termasuk Firebase Authentication, Auth, Okta, atau menggunakan autentikasi berbasis token dengan server sendiri.
 - Membuat Komponen Autentikasi: Biasanya, Anda akan membuat komponen khusus untuk autentikasi, seperti Login, Register, dan Logout. Komponen ini akan berisi formulir untuk masuk atau mendaftar pengguna.
 - Menyimpan Data Pengguna: Setelah pengguna berhasil masuk atau mendaftar, Anda perlu menyimpan data pengguna, seperti token akses, di dalam penyimpanan lokal (local storage) atau dalam state aplikasi.
 - Proteksi Rute: Untuk mengamankan rute-rute yang hanya dapat diakses oleh pengguna yang sudah masuk, Anda perlu menerapkan proteksi rute. Dalam React, Anda bisa menggunakan library seperti react-router untuk mengatur proteksi rute dengan mudah.
