@@ -15,10 +15,12 @@ const CreateProduct = () => {
   const [productNameError, setProductNameError] = useState("");
   // const [products, setProducts] = useState([]);
   const [productPrice, setProductPrice] = useState("");
+  const [productPriceError, setProductPriceError] = useState("");
   const [uniqueId, setUniqueId] = useState(2);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [productCategoryError, setProductCategoryError] = useState("");
+  const [SelectedCategory, setSelectedCategory] = useState("");
+  const [SelectedCategoryError, setSelectedCategoryError] = useState("");
   const [selectedFreshness, setSelectedFreshness] = useState("");
+  const [selectedFreshnessError, setSelectedFreshnessError] = useState("");
   const [additionalDescription, setadditionalDescription] = useState("");
   const [productImage, setProductImage] = useState("");
   const [productImageFile, setProductImageFile] = useState(null);
@@ -34,7 +36,7 @@ const CreateProduct = () => {
       const newProduct = {
         id: uniqueId,
         productName,
-        productCategory: selectedCategory,
+        productCategory: SelectedCategory,
         productFreshness: selectedFreshness,
         productPrice,
         additionalDescription,
@@ -202,7 +204,7 @@ const CreateProduct = () => {
               <Form.Label>{article.category[language]}</Form.Label>
               <Form.Select
                 aria-label="Default select example"
-                value={selectedCategory}
+                value={SelectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 <option value=""></option>
