@@ -8,8 +8,8 @@ import LandingPage from "./landingPage";
 import ProductDetail from "./productDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ReactDOM from "react-dom";
-// import { Provider } from "react-redux";
-// import store from "src/utils/redux/store";
+import { Provider } from "react-redux";
+import store from "../utils/redux/store";
 
 function App() {
   useEffect(() => {

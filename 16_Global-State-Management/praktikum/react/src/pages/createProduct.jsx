@@ -4,69 +4,32 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import logo from "../assets/bootstrap-logo.svg.png";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ProductDetail from "./productDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
 import { addProduct, deleteProduct, editProduct } from "../utils/redux/actions";
 
-const CreateProduct = (props) => {
+const CreateProduct = () => {
   const [productName, setProductName] = useState("");
   const [productNameError, setProductNameError] = useState("");
-  const [uniqueId, setUniqueId] = useState(1);
+  // const [products, setProducts] = useState([]);
+  const [productPrice, setProductPrice] = useState("");
+  const [uniqueId, setUniqueId] = useState(2);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [productCategoryError, setProductCategoryError] = useState("");
   const [selectedFreshness, setSelectedFreshness] = useState("");
   const [additionalDescription, setadditionalDescription] = useState("");
   const [productImage, setProductImage] = useState("");
+  const [productImageFile, setProductImageFile] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [productPriceError, setProductPriceError] = useState("");
 
   const navigate = useNavigate();
   const products = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
-  const [language, setLanguage] = useState("en");
-  const [isEditing, setEditMode] = useState(false);
-  const [editedProduct, setEditedProduct] = useState({});
-
-  const navigateToDetails = (productId, newProduct) => {
-    navigate(`/details/${productId}`, { state: { product: newProduct } });
-  };
-
-  const enableEditProductMode = (product) => {
-    setEditMode(true);
-    setEditedProduct(product);
-    setProductName(product.productName);
-    setSelectedCategory(product.productCategory);
-    setProductPrice(product.productPrice);
-    setProductDescription(product.productDescription);
-    setProductImage(product.productImage);
-  };
-
-  const saveEditedProduct = () => {
-    dispatch(
-      editProduct({
-        ...editedProduct,
-        productName,
-        productCategory: selectedCategory,
-        productPrice,
-        productDescription,
-        productImage,
-      })
-    );
-    setEditMode(false);
-  };
-
-  const cancelEdit = () => {
-    setEditMode(false);
-  };
-
-  const deleteProductFromStore = (productId) => {
-    dispatch(deleteProduct(productId));
-  };
-
-  const addProductToStore = () => {
+  const addProduct = () => {
     if (productNameError === "") {
       const newProduct = {
         id: uniqueId,
@@ -75,92 +38,89 @@ const CreateProduct = (props) => {
         productFreshness: selectedFreshness,
         productPrice,
         additionalDescription,
-        productImage: productImageFile,
+        productImage,
       };
-      dispatch(addProduct(newProduct));
+      setProducts([...products, newProduct]);
       setUniqueId(uniqueId + 1);
       setProductName("");
-      setProductPrice("");
       setSelectedCategory("");
-      setProductDescription("");
       setSelectedFreshness("");
+      setProductPrice("");
+      setadditionalDescription("");
       setProductImage("");
-      setProductImageFile(null);
     }
   };
 
-  const handleImageUpload = (file) => {
-    if (file) {
-      try {
-        const imageUrl = URL.createObjectURL(file);
-        setProductImage(imageUrl);
-        setProductImageFile(file);
-      } catch (error) {
-        console.error("Failed to create object URL:", error);
-      }
-    }
+  const showDeleteConfirmation = (item) => {
+    setItemToDelete(item);
+    setShowDeleteModal(true);
+  };
+  const confirmDeleteItem = () => {
+    const updatedProducts = products.filter(
+      (product) => product.id !== itemToDelete.id
+    );
+    setProducts(updatedProducts);
+    setShowDeleteModal(false);
   };
 
-  const handleProductPriceChange = (e) => {
-    const newPrice = e.target.value;
-    setProductPrice(newPrice);
-
-    const priceRegex = /^\d+(\.\d{1,2})?$/;
-    if (!priceRegex.test(newPrice) || parseFloat(newPrice) <= 0) {
-      setProductPriceError(
-        "Product Price must be a positive number with up to 2 decimal places."
-      );
-    } else {
-      setProductPriceError("");
-    }
-  };
-
-  const handleProductCategoryChange = (e) => {
-    const newCategory = e.target.value;
-    setSelectedCategory(newCategory);
-
-    if (!newCategory) {
-      setProductCategoryError("Please select a product category.");
-    } else {
-      setProductCategoryError("");
-    }
-  };
-
+  // Validasi product name
   const handleProductNameChange = (e) => {
     const newName = e.target.value;
     setProductName(newName);
-    const nameRegex = /^[A-Za-z0-9\s]+$/;
 
-    if (newName.length === 0) {
-      setProductNameError("Please enter a valid product name.");
-    } else if (newName.length < 10) {
-      setProductNameError("Product Name must be at least 10 characters.");
-    } else if (newName.length > 25) {
-      setProductNameError("Product Name must not exceed 25 characters.");
-    } else if (!newName.match(nameRegex)) {
-      setProductNameError(
-        "Product Name can only contain letters, numbers, and spaces."
-      );
+    const regex = /^[A-Za-z\s]{1,25}$/;
+    if (!regex.test(newName)) {
+      setProductNameError("Product Name is not valid.");
     } else {
       setProductNameError("");
     }
   };
 
-  const [productFreshness, setProductFreshness] = useState("");
-  const [freshnessError, setFreshnessError] = useState("");
-  const freshnessRegex = /^(Brand New|Second Hand|Refurbished)$/;
+  // Validasi product category
+  const validateProductCategory = (category) => {
+    const validCategories = ["Television", "Radio", "Speaker"];
+    return validCategories.includes(category);
+  };
 
-  const handleProductFreshnessChange = (e) => {
-    const newFreshness = e.target.value;
-    setProductFreshness(newFreshness);
+  const handleCategoryChange = (e) => {
+    const newCategory = e.target.value;
+    setSelectedCategory(newCategory);
 
-    if (!freshnessRegex.test(newFreshness)) {
-      setFreshnessError("Please select a valid product freshness option.");
+    if (!validateProductCategory(newCategory)) {
+      setSelectedCategoryError("Invalid category selected.");
     } else {
-      setFreshnessError("");
+      setSelectedCategoryError("");
     }
   };
 
+  // Validasi product freshness
+  const validateProductFreshness = (freshness) => {
+    const validFreshnessOptions = ["Brand New", "Second Hand", "Refurbished"];
+    return validFreshnessOptions.includes(freshness);
+  };
+
+  const handleFreshnessChange = (e) => {
+    const newFreshness = e.target.value;
+    setSelectedFreshness(newFreshness);
+
+    if (!validateProductFreshness(newFreshness)) {
+      setSelectedFreshnessError("Invalid freshness selected.");
+    } else {
+      setSelectedFreshnessError("");
+    }
+  };
+
+  // Validasi product price
+  const handleProductPriceChange = (e) => {
+    const newPrice = e.target.value;
+    setProductPrice(newPrice);
+
+    if (!/^\d+(\.\d{0,2})?$/.test(newPrice)) {
+      setProductPriceError("Invalid price format.");
+    } else {
+      setProductPriceError("");
+    }
+  };
   const article = {
     title: {
       id: "Buat Akun",
@@ -195,9 +155,8 @@ const CreateProduct = (props) => {
       en: "Product Price :",
     },
   };
+  const [language, setLanguage] = useState("en");
   const [randomNumber, setRandomNumber] = useState(0);
-  const [productPrice, setProductPrice] = useState("");
-
   const generateRandomNumber = () => {
     const newRandomNumber = Math.floor(Math.random() * 100) + 1;
     setRandomNumber(newRandomNumber);
