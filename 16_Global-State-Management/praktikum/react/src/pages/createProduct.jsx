@@ -13,102 +13,139 @@ import { addProduct, deleteProduct, editProduct } from "../utils/redux/actions";
 const CreateProduct = () => {
   const [productName, setProductName] = useState("");
   const [productNameError, setProductNameError] = useState("");
-  // const [products, setProducts] = useState([]);
   const [productPrice, setProductPrice] = useState("");
   const [productPriceError, setProductPriceError] = useState("");
   const [uniqueId, setUniqueId] = useState(2);
-  const [SelectedCategory, setSelectedCategory] = useState("");
-  const [SelectedCategoryError, setSelectedCategoryError] = useState("");
-  const [selectedFreshness, setSelectedFreshness] = useState("");
-  const [selectedFreshnessError, setSelectedFreshnessError] = useState("");
-  const [additionalDescription, setadditionalDescription] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [productCategoryError, setProductCategoryError] = useState("");
+  const [productDescription, setProductDescription] = useState("");
   const [productImage, setProductImage] = useState("");
   const [productImageFile, setProductImageFile] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
 
   const navigate = useNavigate();
   const products = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
-  const addProduct = () => {
+  const [language, setLanguage] = useState("en");
+  const [isEditing, setEditMode] = useState(false);
+  const [editedProduct, setEditedProduct] = useState({});
+
+  const navigateToDetails = (productId, newProduct) => {
+    navigate(`/details/${productId}`, { state: { product: newProduct } });
+  };
+
+  const enableEditProductMode = (product) => {
+    setEditMode(true);
+    setEditedProduct(product);
+    setProductName(product.productName);
+    setSelectedCategory(product.productCategory);
+    setProductPrice(product.productPrice);
+    setProductDescription(product.productDescription);
+    setProductImage(product.productImage);
+  };
+
+  const saveEditedProduct = () => {
+    dispatch(
+      editProduct({
+        ...editedProduct,
+        productName,
+        productCategory: selectedCategory,
+        productPrice,
+        productDescription,
+        productImage,
+      })
+    );
+    setEditMode(false);
+  };
+
+  const cancelEdit = () => {
+    setEditMode(false);
+  };
+
+  const deleteProductFromStore = (productId) => {
+    dispatch(deleteProduct(productId));
+  };
+
+  const addProductToStore = () => {
     if (productNameError === "") {
       const newProduct = {
         id: uniqueId,
         productName,
-        productCategory: SelectedCategory,
+        productCategory: selectedCategory,
         productFreshness: selectedFreshness,
         productPrice,
         additionalDescription,
         productImage,
       };
-      setProducts([...products, newProduct]);
+      dispatch(addProduct(newProduct));
       setUniqueId(uniqueId + 1);
       setProductName("");
       setSelectedCategory("");
       setSelectedFreshness("");
       setProductPrice("");
       setadditionalDescription("");
-      setProductImage("");
+      setProductImageFile(null);
     }
   };
 
-  const showDeleteConfirmation = (item) => {
-    setItemToDelete(item);
-    setShowDeleteModal(true);
-  };
-  const confirmDeleteItem = () => {
-    const updatedProducts = products.filter(
-      (product) => product.id !== itemToDelete.id
-    );
-    setProducts(updatedProducts);
-    setShowDeleteModal(false);
+  const handleImageUpload = (file) => {
+    if (file) {
+      try {
+        const imageUrl = URL.createObjectURL(file);
+        setProductImage(imageUrl);
+        setProductImageFile(file);
+      } catch (error) {
+        console.error("Failed to create object URL:", error);
+      }
+    }
   };
 
   // Validasi product name
   const handleProductNameChange = (e) => {
     const newName = e.target.value;
     setProductName(newName);
+    const nameRegex = /^[A-Za-z0-9\s]+$/;
 
-    const regex = /^[A-Za-z\s]{1,25}$/;
-    if (!regex.test(newName)) {
-      setProductNameError("Product Name is not valid.");
+    if (newName.length === 0) {
+      setProductNameError("Please enter a valid product name.");
+    } else if (newName.length < 10) {
+      setProductNameError("Product Name must be at least 10 characters.");
+    } else if (newName.length > 25) {
+      setProductNameError("Product Name must not exceed 25 characters.");
+    } else if (!newName.match(nameRegex)) {
+      setProductNameError(
+        "Product Name can only contain letters, numbers, and spaces."
+      );
     } else {
       setProductNameError("");
     }
   };
 
   // Validasi product category
-  const validateProductCategory = (category) => {
-    const validCategories = ["Television", "Radio", "Speaker"];
-    return validCategories.includes(category);
-  };
-
-  const handleCategoryChange = (e) => {
+  const handleProductCategoryChange = (e) => {
     const newCategory = e.target.value;
     setSelectedCategory(newCategory);
 
-    if (!validateProductCategory(newCategory)) {
-      setSelectedCategoryError("Invalid category selected.");
+    if (!newCategory) {
+      setProductCategoryError("Please select a product category.");
     } else {
-      setSelectedCategoryError("");
+      setProductCategoryError("");
     }
   };
 
+  const [productFreshness, setProductFreshness] = useState("");
+  const [freshnessError, setFreshnessError] = useState("");
+  const freshnessRegex = /^(Brand New|Second Hand|Refurbished)$/;
+
   // Validasi product freshness
-  const validateProductFreshness = (freshness) => {
-    const validFreshnessOptions = ["Brand New", "Second Hand", "Refurbished"];
-    return validFreshnessOptions.includes(freshness);
-  };
-
-  const handleFreshnessChange = (e) => {
+  const handleProductFreshnessChange = (e) => {
     const newFreshness = e.target.value;
-    setSelectedFreshness(newFreshness);
+    setProductFreshness(newFreshness);
 
-    if (!validateProductFreshness(newFreshness)) {
-      setSelectedFreshnessError("Invalid freshness selected.");
+    if (!freshnessRegex.test(newFreshness)) {
+      setFreshnessError("Please select a valid product freshness option.");
     } else {
-      setSelectedFreshnessError("");
+      setFreshnessError("");
     }
   };
 
@@ -117,12 +154,16 @@ const CreateProduct = () => {
     const newPrice = e.target.value;
     setProductPrice(newPrice);
 
-    if (!/^\d+(\.\d{0,2})?$/.test(newPrice)) {
-      setProductPriceError("Invalid price format.");
+    const priceRegex = /^\d+(\.\d{1,2})?$/;
+    if (!priceRegex.test(newPrice) || parseFloat(newPrice) <= 0) {
+      setProductPriceError(
+        "Product Price must be a positive number with up to 2 decimal places."
+      );
     } else {
       setProductPriceError("");
     }
   };
+
   const article = {
     title: {
       id: "Buat Akun",
@@ -157,7 +198,7 @@ const CreateProduct = () => {
       en: "Product Price :",
     },
   };
-  const [language, setLanguage] = useState("en");
+
   const [randomNumber, setRandomNumber] = useState(0);
   const generateRandomNumber = () => {
     const newRandomNumber = Math.floor(Math.random() * 100) + 1;
@@ -165,6 +206,7 @@ const CreateProduct = () => {
     console.log("angka random: ", newRandomNumber);
     setProductPrice(newRandomNumber);
   };
+
   return (
     <div>
       <div className="container align-self-center my-3">
@@ -200,25 +242,31 @@ const CreateProduct = () => {
                 <div className="text-danger">{productNameError}</div>
               )}
             </Form.Group>
-            <Form.Group className="col-md-6 mb-3" controlId="categoryProduct">
+            <Form.Group className="col-md-6 mb-3" controlId="productCategory">
               <Form.Label>{article.category[language]}</Form.Label>
               <Form.Select
                 aria-label="Default select example"
-                value={SelectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                value={selectedCategory}
+                onChange={handleProductCategoryChange}
               >
                 <option value=""></option>
                 <option value="Television">Television</option>
                 <option value="Radio">Radio</option>
                 <option value="Speaker">Speaker</option>
               </Form.Select>
+              {productCategoryError && (
+                <div className="text-danger">{productCategoryError}</div>
+              )}
             </Form.Group>
-            <Form.Group className="col-md-6 mb-3" controlId="imageProduct">
+            <Form.Group
+              className="imageProduct col-md-6 mb-3"
+              controlId="imageProduct"
+            >
               <Form.Label>{article.image[language]}</Form.Label>
               <Form.Control
                 type="file"
                 size="sm"
-                onChange={(e) => setProductImage(e.target.files[0])}
+                onChange={(e) => handleImageUpload(e.target.files[0])}
               />
             </Form.Group>
             <Form.Group className="col-md-6 mb-3" controlId="stockProduct">
@@ -230,8 +278,8 @@ const CreateProduct = () => {
                   label="Brand New"
                   name="freshness"
                   value="Brand New"
-                  checked={selectedFreshness === "Brand New"}
-                  onChange={(e) => setSelectedFreshness(e.target.value)}
+                  checked={productFreshness === "Brand New"}
+                  onChange={handleProductFreshnessChange}
                 />
                 <Form.Check
                   type="radio"
@@ -239,8 +287,8 @@ const CreateProduct = () => {
                   label="Second Hand"
                   name="freshness"
                   value="Second Hand"
-                  checked={selectedFreshness === "Second Hand"}
-                  onChange={(e) => setSelectedFreshness(e.target.value)}
+                  checked={productFreshness === "Second Hand"}
+                  onChange={handleProductFreshnessChange}
                 />
                 <Form.Check
                   type="radio"
@@ -248,10 +296,13 @@ const CreateProduct = () => {
                   label="Refurbished"
                   name="freshness"
                   value="Refurbished"
-                  checked={selectedFreshness === "Refurbished"}
-                  onChange={(e) => setSelectedFreshness(e.target.value)}
+                  checked={productFreshness === "Refurbished"}
+                  onChange={handleProductFreshnessChange}
                 />
               </div>
+              {freshnessError && (
+                <div className="text-danger">{freshnessError}</div>
+              )}
             </Form.Group>
             <Form.Group
               className="col-md-6 mb-3"
@@ -261,18 +312,21 @@ const CreateProduct = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                value={additionalDescription}
-                onChange={(e) => setadditionalDescription(e.target.value)}
+                value={productDescription}
+                onChange={(e) => setProductDescription(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="col-md-6 mb-3" controlId="priceProduct">
+            <Form.Group className="col-md-6 mb-3" controlId="productPrice">
               <Form.Label>{article.harga[language]}</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="$ 100"
                 value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
+                onChange={handleProductPriceChange}
               />
+              {productPriceError && (
+                <div className="text-danger">{productPriceError}</div>
+              )}
               <Button
                 className="d-grid gap-2 col-md-4 col-4"
                 onClick={generateRandomNumber}
@@ -284,9 +338,12 @@ const CreateProduct = () => {
               className="d-grid gap-2 col-md-4 col-4"
               as="input"
               type="button"
-              value="Submit"
-              onClick={addProduct}
-              disabled={productNameError !== ""}
+              value={isEditing ? "Save" : "Submit"}
+              onClick={isEditing ? saveEditedProduct : addProductToStore}
+              disabled={
+                (isEditing && productNameError !== "") ||
+                (!isEditing && productNameError !== "")
+              }
             />
           </div>
         </Form>
@@ -310,61 +367,164 @@ const CreateProduct = () => {
             <tr key={product.id}>
               <Link to={`/product/${product.id}`}>{product.id}</Link>
               {/* <td>{index + 1}</td> */}
-              <td>{product.productName}</td>
-              <td>{product.productCategory}</td>
-              <td>{product.productFreshness}</td>
-              <td>{product.productPrice}</td>
-              <td>{product.additionalDescription}</td> {}
               <td>
-                {product.productImage && (
-                  <img
-                    src={URL.createObjectURL(product.productImage)}
-                    alt="Product"
-                    width="50"
+                {isEditing && editedProduct.id === product.id ? (
+                  <input
+                    type="text"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
                   />
-                )}{" "}
-                {}
+                ) : (
+                  product.productName
+                )}
               </td>
               <td>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => showDeleteConfirmation(product)}
-                >
-                  Delete
-                </button>
+                {isEditing && editedProduct.id === product.id ? (
+                  <select
+                    value={selectedCategory}
+                    onChange={handleProductCategoryChange}
+                  >
+                    <option value=""></option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="furniture">Furniture</option>
+                  </select>
+                ) : (
+                  product.productCategory
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <select
+                    value={selectedCategory}
+                    onChange={handleProductCategoryChange}
+                  >
+                    <option value=""></option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="furniture">Furniture</option>
+                  </select>
+                ) : (
+                  product.productCategory
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <div>
+                    <input
+                      type="radio"
+                      id="BrandNew"
+                      name="freshness"
+                      value="Brand New"
+                      checked={productFreshness === "Brand New"}
+                      onChange={handleProductFreshnessChange}
+                    />
+                    <label htmlFor="BrandNew">Brand New</label>
+                    <input
+                      type="radio"
+                      id="SecondHand"
+                      name="freshness"
+                      value="Second Hand"
+                      checked={productFreshness === "Second Hand"}
+                      onChange={handleProductFreshnessChange}
+                    />
+                    <label htmlFor="SecondHand">Second Hand</label>
+                    <input
+                      type="radio"
+                      id="Refurbished"
+                      name="freshness"
+                      value="Refurbished"
+                      checked={productFreshness === "Refurbished"}
+                      onChange={handleProductFreshnessChange}
+                    />
+                    <label htmlFor="Refurbished">Refurbished</label>
+                  </div>
+                ) : (
+                  product.productFreshness
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <input
+                    type="number"
+                    value={productPrice}
+                    onChange={handleProductPriceChange}
+                  />
+                ) : (
+                  product.productPrice
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <textarea
+                    value={productDescription}
+                    onChange={(e) => setProductDescription(e.target.value)}
+                  />
+                ) : (
+                  product.productDescription
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <input
+                    type="file"
+                    onChange={(e) => handleImageUpload(e.target.files[0])}
+                  />
+                ) : (
+                  product.productImage && (
+                    <img
+                      src={URL.createObjectURL(product.productImage)}
+                      alt="Product"
+                      width="50"
+                    />
+                  )
+                )}
+              </td>
+              <td>
+                {isEditing && editedProduct.id === product.id ? (
+                  <div>
+                    <button
+                      className="btn btn-primary mx-3"
+                      onClick={saveEditedProduct}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="btn btn-success mx-3"
+                      onClick={cancelEdit}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <button
+                      className="btn btn-primary mx-3"
+                      onClick={() => navigateToDetails(product.id, product)}
+                    >
+                      Detail
+                    </button>
+                    <button
+                      className="btn btn-warning mx-3"
+                      onClick={() => enableEditProductMode(product)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger mx-3"
+                      onClick={() => deleteProductFromStore(product.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {}
-      {showDeleteModal && (
-        <div className="container my-3">
-          <div className="delete-modal row justify-content-center">
-            <p>Apakah anda yakin ingin menghapus?</p>
-            <div className="container my-3 row justify-content-center gap-4">
-              <button
-                className="btn btn-danger d-grid gap-2 col-md-3 col-4"
-                onClick={confirmDeleteItem}
-              >
-                Delete
-              </button>
-              <button
-                className="btn btn-secondary d-grid gap-2 col-md-3 col-4"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
-
-const mapStateToProps = (state) => ({
-  products: state.products,
-});
 
 export default CreateProduct;
