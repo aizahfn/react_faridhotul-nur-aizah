@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/fairyCafe.css";
+import ContactUs from "../components/ContactUs";
 
 export default function FairyCafe() {
   return (
@@ -79,7 +80,8 @@ export default function FairyCafe() {
       {/* Hero Section */}
       {/* Contact Section */}
       <section id="contact" className="contact">
-        <h2>Contact Us</h2>
+        <ContactUs />
+        {/* <h2>Contact Us</h2>
         <p>Lets Get In Touch With Us</p>
         <div className="row">
           <form className="contact" action="">
@@ -116,7 +118,7 @@ export default function FairyCafe() {
               </button>
             </div>
           </form>
-        </div>
+        </div> */}
       </section>
       {/* Contact Section */}
       {/* Footer */}
