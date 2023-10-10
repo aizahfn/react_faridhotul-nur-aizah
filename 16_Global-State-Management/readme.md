@@ -1,5 +1,7 @@
 # (16)Global State Management
 
+Link Vercel : https://react-deploy-beta-hazel.vercel.app/
+
 ## 1. Global State Introduction
 
 Redux merupakan library untuk management state global, menggunakan struktur one way data flow, dan menggunakan beberapa tipe code.
