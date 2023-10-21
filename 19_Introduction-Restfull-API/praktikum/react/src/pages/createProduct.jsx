@@ -121,7 +121,7 @@ const CreateProduct = () => {
   useEffect(() => {
     // Menggunakan Axios untuk mengambil data dari endpoint MockAPI
     axios
-      .get("https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/:endpoint")
+      .get("https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/products")
       .then((response) => {
         setProducts(response.data);
       })
