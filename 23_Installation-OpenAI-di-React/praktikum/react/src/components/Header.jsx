@@ -28,8 +28,8 @@ const Header = () => {
               <Nav.Link className="text-primary" href="create">
                 Create Product
               </Nav.Link>
-              <Nav.Link className="text-primary" href="#link">
-                FAQs
+              <Nav.Link className="text-primary" href="chat">
+                Chat Bot
               </Nav.Link>
               <Nav.Link className="text-primary" href="#link">
                 About

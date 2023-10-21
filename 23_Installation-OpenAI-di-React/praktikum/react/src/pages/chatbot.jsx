@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { OpenAIApi } from "openai";
+import { Link } from "react-router-dom";
 
 const ChatBot = () => {
   const [inputText, setInputText] = useState("");

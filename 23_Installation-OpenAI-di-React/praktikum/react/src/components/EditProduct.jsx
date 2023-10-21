@@ -22,7 +22,6 @@ const EditProduct = ({ product, onUpdate, onCancel }) => {
       })
       .catch((error) => {
         console.log("Error updating product:", error);
-        // Tampilkan pesan error jika diperlukan
       });
   };
 

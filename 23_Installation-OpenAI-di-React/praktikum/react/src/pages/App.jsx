@@ -6,6 +6,7 @@ import Header from "../components/Header.jsx";
 import CreateProduct from "./createProduct.jsx";
 import LandingPage from "./landingPage";
 import ProductDetail from "./productDetail";
+import ChatBot from "./chatBot";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/create" element={<CreateProduct />} />
             <Route path="/product" element={<ProductDetail />} />
+            <Route path="/chat" element={<ChatBot />} />
           </Routes>
         </div>
       </Router>
