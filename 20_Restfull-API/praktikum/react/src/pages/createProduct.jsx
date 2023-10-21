@@ -47,7 +47,6 @@ const CreateProduct = () => {
         })
         .catch((error) => {
           console.log("Error adding product:", error);
-          // Tampilkan pesan error jika diperlukan
         });
 
       setProducts([...products, newProduct]);
@@ -72,13 +71,10 @@ const CreateProduct = () => {
       )
       .then((response) => {
         console.log("Product deleted successfully:", response.data);
-        // Tambahkan pesan sukses di sini, misalnya:
         alert("Product deleted successfully!");
-        // Update state atau melakukan hal lain setelah penghapusan
       })
       .catch((error) => {
         console.log("Error deleting product:", error);
-        // Tampilkan pesan error jika diperlukan
       });
     setShowDeleteModal(false);
   };
@@ -161,7 +157,6 @@ const CreateProduct = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Menggunakan Axios untuk mengambil data dari endpoint MockAPI
     axios
       .get("https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/products")
       .then((response) => {

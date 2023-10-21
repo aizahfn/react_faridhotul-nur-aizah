@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import ProductDetail from "./productDetail";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
+import EditProduct from "../components/EditProduct";
 
 const CreateProduct = () => {
   const [productName, setProductName] = useState("");
@@ -34,6 +35,21 @@ const CreateProduct = () => {
         additionalDescription,
         productImage,
       };
+
+      axios
+        .post(
+          "https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/products",
+          newProduct
+        )
+        .then((response) => {
+          console.log("Product added successfully:", response.data);
+          alert("Product added successfully!");
+        })
+        .catch((error) => {
+          console.log("Error adding product:", error);
+          // Tampilkan pesan error jika diperlukan
+        });
+
       setProducts([...products, newProduct]);
       setUniqueId(uniqueId + 1);
       setProductName("");
@@ -50,11 +66,37 @@ const CreateProduct = () => {
     setShowDeleteModal(true);
   };
   const confirmDeleteItem = () => {
-    const updatedProducts = products.filter(
-      (product) => product.id !== itemToDelete.id
+    axios
+      .delete(
+        `https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/products/${itemToDelete.id}`
+      )
+      .then((response) => {
+        console.log("Product deleted successfully:", response.data);
+        // Tambahkan pesan sukses di sini, misalnya:
+        alert("Product deleted successfully!");
+        // Update state atau melakukan hal lain setelah penghapusan
+      })
+      .catch((error) => {
+        console.log("Error deleting product:", error);
+        // Tampilkan pesan error jika diperlukan
+      });
+    setShowDeleteModal(false);
+  };
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(null);
+
+  const showEditProduct = (product) => {
+    setProductToEdit(product);
+    setShowEditModal(true);
+  };
+
+  const updateProductInList = (updatedProduct) => {
+    const updatedProducts = products.map((product) =>
+      product.id === updatedProduct.id ? updatedProduct : product
     );
     setProducts(updatedProducts);
-    setShowDeleteModal(false);
+    setShowEditModal(false);
   };
 
   // Validasi product name
@@ -119,6 +161,7 @@ const CreateProduct = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    // Menggunakan Axios untuk mengambil data dari endpoint MockAPI
     axios
       .get("https://652628ba67cfb1e59ce7f1b6.mockapi.io/api/v1/products")
       .then((response) => {
@@ -173,8 +216,79 @@ const CreateProduct = () => {
     console.log("angka random: ", newRandomNumber);
     setProductPrice(newRandomNumber);
   };
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+
+    const dummyUser = { username: "admin", password: "password123" };
+
+    if (username === dummyUser.username && password === dummyUser.password) {
+      localStorage.setItem("user", JSON.stringify(dummyUser));
+      localStorage.setItem("isLoggedIn", true);
+      setIsLoggedIn(true);
+    } else {
+      setErrorMessage("Invalid username or password");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.setItem("isLoggedIn", false);
+    setIsLoggedIn(false);
+  };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="container">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label htmlFor="username" className="form-label">
+              Username
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Login
+          </button>
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div>
+       <td>
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Logout
+                </button>
+              </td>
       <div className="container align-self-center my-3">
         <button
           className="my-auto bg-primary border-0 rounded-3 text-light mx-auto d-block col-lg-3"
@@ -335,16 +449,32 @@ const CreateProduct = () => {
               <td>
                 <button
                   className="btn btn-danger"
+                  onClick={() => showEditProduct(product)}
+                >
+                  Edit
+                </button>
+              </td>
+              <td>
+                <button
+                  className="btn btn-danger"
                   onClick={() => showDeleteConfirmation(product)}
                 >
                   Delete
                 </button>
               </td>
+             
             </tr>
           ))}
         </tbody>
       </table>
       {}
+      {showEditModal && (
+        <EditProduct
+          product={productToEdit}
+          onUpdate={updateProductInList}
+          onCancel={() => setShowEditModal(false)}
+        />
+      )}
       {showDeleteModal && (
         <div className="container my-3">
           <div className="delete-modal row justify-content-center">
