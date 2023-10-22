@@ -6,7 +6,6 @@ const ChatBot = () => {
   const [inputText, setInputText] = useState("");
   const [response, setResponse] = useState("");
 
-  // Fungsi untuk mengirim permintaan ke OpenAI
   const sendRequestToOpenAI = async () => {
     const openai = new OpenAIApi({
       apiKey: "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",
@@ -16,7 +15,7 @@ const ChatBot = () => {
       const result = await openai.createCompletion({
         engine: "davinci",
         prompt: inputText,
-        max_tokens: 50, // Jumlah token maksimum dalam respons
+        max_tokens: 50,
       });
 
       setResponse(result.choices[0].text);
@@ -47,6 +46,10 @@ const ChatBot = () => {
         <button type="submit">Submit</button>
       </form>
       <div className="response">{response}</div>
+
+      <div>
+        <h4>JAWABAN</h4>
+      </div>
     </div>
   );
 };
