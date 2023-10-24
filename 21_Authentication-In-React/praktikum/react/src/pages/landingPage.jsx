@@ -4,6 +4,7 @@ import landing from "../assets/hero-img.png.png";
 import { Link } from "react-router-dom";
 
 function LandingPage() {
+  
   return (
     <div>
       <>

@@ -25,11 +25,11 @@ const Header = () => {
               <Nav.Link className="text-primary" href="/">
                 Landing Page
               </Nav.Link>
-              <Nav.Link className="text-primary" href="create">
+              <Nav.Link className="text-primary" href="/create">
                 Create Product
               </Nav.Link>
-              <Nav.Link className="text-primary" href="#link">
-                FAQs
+              <Nav.Link className="text-primary" href="/login">
+                Login
               </Nav.Link>
               <Nav.Link className="text-primary" href="#link">
                 About

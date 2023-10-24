@@ -6,6 +6,7 @@ import Header from "../components/Header.jsx";
 import CreateProduct from "./createProduct.jsx";
 import LandingPage from "./landingPage";
 import ProductDetail from "./productDetail";
+import Login from "./Login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/create" element={<CreateProduct />} />
             <Route path="/product" element={<ProductDetail />} />
           </Routes>
