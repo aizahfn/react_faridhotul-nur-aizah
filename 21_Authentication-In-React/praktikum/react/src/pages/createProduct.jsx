@@ -214,71 +214,6 @@ const CreateProduct = () => {
     setProductPrice(newRandomNumber);
   };
 
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [isLoggedIn, setIsLoggedIn] = useState(
-  //   localStorage.getItem("isLoggedIn") === "true"
-  // );
-  // const [errorMessage, setErrorMessage] = useState("");
-
-  // const handleLogin = (event) => {
-  //   event.preventDefault();
-
-  //   const dummyUser = { username: "admin", password: "password123" };
-
-  //   if (username === dummyUser.username && password === dummyUser.password) {
-  //     localStorage.setItem("user", JSON.stringify(dummyUser));
-  //     localStorage.setItem("isLoggedIn", true);
-  //     setIsLoggedIn(true);
-  //   } else {
-  //     setErrorMessage("Invalid username or password");
-  //   }
-  // };
-
-  // const handleLogout = () => {
-  //   localStorage.removeItem("user");
-  //   localStorage.setItem("isLoggedIn", false);
-  //   setIsLoggedIn(false);
-  // };
-
-  // if (!isLoggedIn) {
-  //   return (
-  //     <div className="container">
-  //       <h2>Login</h2>
-  //       <form onSubmit={handleLogin}>
-  //         <div className="mb-3">
-  //           <label htmlFor="username" className="form-label">
-  //             Username
-  //           </label>
-  //           <input
-  //             type="text"
-  //             className="form-control"
-  //             id="username"
-  //             value={username}
-  //             onChange={(e) => setUsername(e.target.value)}
-  //           />
-  //         </div>
-  //         <div className="mb-3">
-  //           <label htmlFor="password" className="form-label">
-  //             Password
-  //           </label>
-  //           <input
-  //             type="password"
-  //             className="form-control"
-  //             id="password"
-  //             value={password}
-  //             onChange={(e) => setPassword(e.target.value)}
-  //           />
-  //         </div>
-  //         <button type="submit" className="btn btn-primary">
-  //           Login
-  //         </button>
-  //         {errorMessage && <p className="text-danger">{errorMessage}</p>}
-  //       </form>
-  //     </div>
-  //   );
-  // }
-
   if (!isAuthenticated()) {
     return (
       <div className="container">
@@ -295,9 +230,6 @@ const CreateProduct = () => {
             Logout
           </button>
         </div>
-        {/* <button className="btn btn-danger" onClick={handleLogout}>
-          Logout
-        </button> */}
       </td>
       <div className="container align-self-center my-3">
         <button
